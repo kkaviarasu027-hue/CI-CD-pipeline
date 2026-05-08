@@ -1,0 +1,36 @@
+name: Python CI Pipeline
+
+# Trigger the pipeline on every push to the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    # Use a fresh Ubuntu Linux runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Downloads your code into the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Sets up the Python version to match your local 3.13
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      # 3. Installs the libraries listed in your requirement.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
+          pip install pytest  # Ensures pytest is available even if not in requirements
+
+      # 4. Executes the tests in test_app.py
+      - name: Run tests with pytest
+        run: |
+          pytest test_app.py
