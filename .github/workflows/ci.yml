@@ -1,36 +1,61 @@
 name: Python CI Pipeline
 
-# Trigger the pipeline on every push to the main branch
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: write  # Crucial: Gives the runner permission to create the gh-pages branch
+
 jobs:
   build-and-test:
-    # Use a fresh Ubuntu Linux runner
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Downloads your code into the runner
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Sets up the Python version to match your local 3.13
       - name: Set up Python 3.13
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
 
-      # 3. Installs the libraries listed in your requirement.txt
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
-          pip install pytest  # Ensures pytest is available even if not in requirements
+          pip install pytest allure-pytest  # Added allure-pytest here
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # 4. Executes the tests in test_app.py
+      # 4. Executes tests AND creates the allure-results folder
       - name: Run tests with pytest
-        run: |
-          pytest test_app.py
+        run: pytest test_app.py --alluredir=allure-results
+        continue-on-error: true # Keep going even if tests fail so we get a report
+
+      # 5. DOWNLOAD PREVIOUS HISTORY (This is the "Permanent" part)
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # 6. GENERATE THE ACTUAL REPORT
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      # 7. CREATE THE gh-pages BRANCH AND UPLOAD
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
