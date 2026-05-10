@@ -1,41 +1,31 @@
-name: Python CI Pipeline
+name: Playwright Tests & Allure Report
 
 on:
   push:
-    branches: [ "main1", "login" ]
-  pull_request:
-    branches: [ "main1", "login" ]
-
-# Ensures Node.js 24 is used for 2026 compatibility
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    branches: [ main ]
 
 permissions:
-  contents: write
+  contents: write  # Required to push the report to gh-pages branch
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.13
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pytest allure-pytest pytest-playwright
-          playwright install --with-deps chromium
+          pip install pytest playwright pytest-playwright allure-pytest
+          playwright install --with-deps
 
-      - name: Run tests with pytest
-        # Targets your combined logic file
-        run: pytest test_login_logic.py --alluredir=allure-results
-        continue-on-error: true
+      - name: Run Tests
+        if: always()
+        run: pytest --alluredir=allure-results --clean-alluredir
 
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -48,14 +38,16 @@ jobs:
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
+        id: allure-report
         with:
           allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
           allure_history: allure-history
-          keep_reports: 20
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy report to Github Pages
         if: always()
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
