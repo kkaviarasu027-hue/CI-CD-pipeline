@@ -27,12 +27,32 @@ class TestLoginLogic:
 
     @allure.title("Invalid Username Test")
     def test_invalid_username(self):
+
         self.navigate()
-        self.page.locator("input[type='email']").fill("wronguser@yopmail.com")
-        self.page.locator("input[type='password']").fill("Kal@2026")
-        self.page.get_by_role("checkbox").click(force=True)
-        self.page.get_by_role("button", name="Login").click()
-        expect(self.page.get_by_text("Unauthorized access")).to_be_visible()
+
+        # wait for login form to load
+        self.page.wait_for_load_state("networkidle")
+
+        # stable locators (IMPORTANT FIX)
+        email = self.page.get_by_role("textbox").first
+        password = self.page.get_by_role("textbox").nth(1)
+
+        expect(email).to_be_visible()
+        expect(password).to_be_visible()
+
+        email.fill("wronguser@yopmail.com")
+        password.fill("Kal@2026")
+
+        checkbox = self.page.get_by_role("checkbox")
+        if not checkbox.is_checked():
+            checkbox.check(force=True)
+
+        login_btn = self.page.get_by_role("button", name="Login")
+        login_btn.click()
+
+        expect(
+            self.page.get_by_text("Unauthorized access")
+        ).to_be_visible(timeout=10000)
 
     @allure.title("Invalid Password Test")
     def test_invalid_password(self):
