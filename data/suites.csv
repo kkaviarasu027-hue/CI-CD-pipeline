@@ -1,0 +1,5 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","18890","test_course_category","","2026-05-19","passed","2026-05-19","","test_Automation_for_course_master","",""
+"","11002","test_department_master","","2026-05-19","passed","2026-05-19","","test_Automation_for_Department_master","",""
+"","27226","test_create_institute","","2026-05-19","passed","2026-05-19","","test_Automation_for_institute_master","",""
+"","61720","test_trust_master","","2026-05-19","passed","2026-05-19","","test_Automation_for_trust_master","",""
