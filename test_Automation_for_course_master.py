@@ -20,7 +20,6 @@ def driver():
 # ================= YOUR SCRIPT (NO FLOW CHANGED) =================
 def test_course_category(driver):
 
-    # Launch Chrome is already handled by fixture
 
     # Wait object
     wait = WebDriverWait(driver, 10)
