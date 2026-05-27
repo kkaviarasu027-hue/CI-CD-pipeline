@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        // Points to the Allure configuration name we saved in Jenkins Global Tools
-        allure 'allure'
+        // Capitalized 'Allure' to match the Jenkins tool type standard
+        Allure 'allure'
     }
 
     stages {
@@ -16,7 +16,6 @@ pipeline {
         stage('Install Environment & Run Tests') {
             steps {
                 echo 'Setting up project environment and running Playwright scripts...'
-                // For Windows systems running Python Playwright:
                 bat '''
                 pip install -r requirements.txt
                 pytest --alluredir=allure-results
@@ -27,7 +26,6 @@ pipeline {
 
     post {
         always {
-            // This reads your allure-results JSON logs and builds the dashboard webpage
             allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
     }
