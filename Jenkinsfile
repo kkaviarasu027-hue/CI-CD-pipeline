@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Tells Jenkins to use the Allure tool configuration we just named
+        // Points to the Allure configuration name we saved in Jenkins Global Tools
         allure 'allure'
     }
 
@@ -13,21 +13,21 @@ pipeline {
             }
         }
 
-        stage('Run Playwright Tests') {
+        stage('Install Environment & Run Tests') {
             steps {
-                echo 'Executing test suites...'
-                // If running Node-based Playwright:
-                // bat 'npm install && npx playwright test'
-
-                // If running Python-based Playwright/Pytest:
-                // bat 'pip install -r requirements.txt && pytest --alluredir=allure-results'
+                echo 'Setting up project environment and running Playwright scripts...'
+                // For Windows systems running Python Playwright:
+                bat '''
+                pip install -r requirements.txt
+                pytest --alluredir=allure-results
+                '''
             }
         }
     }
 
     post {
         always {
-            // This hook reads your allure-results folder and builds the dashboard webpage
+            // This reads your allure-results JSON logs and builds the dashboard webpage
             allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
     }
