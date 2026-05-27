@@ -1,0 +1,10 @@
+{
+  "name": "Case 2: Alternate Invalid Email Test",
+  "status": "passed",
+  "stage": "finished",
+  "start": 1716723015000,
+  "stop": 1716723030000,
+  "uuid": "22222222-2222-2222-2222-222222222222",
+  "historyId": "case_2_auth",
+  "fullName": "NegativeTests.js: Case 2"
+}

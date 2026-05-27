@@ -1,0 +1,10 @@
+{
+  "name": "Case 3: Alternate Incorrect Password Test",
+  "status": "passed",
+  "stage": "finished",
+  "start": 1716723030000,
+  "stop": 1716723045000,
+  "uuid": "33333333-3333-3333-3333-333333333333",
+  "historyId": "case_3_auth",
+  "fullName": "NegativeTests.js: Case 3"
+}

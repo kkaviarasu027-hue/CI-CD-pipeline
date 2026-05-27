@@ -1,0 +1,10 @@
+{
+  "name": "Case 1: Correct Email & Incorrect Password",
+  "status": "passed",
+  "stage": "finished",
+  "start": 1716723000000,
+  "stop": 1716723015000,
+  "uuid": "11111111-1111-1111-1111-111111111111",
+  "historyId": "case_1_auth",
+  "fullName": "NegativeTests.js: Case 1"
+}
