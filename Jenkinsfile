@@ -8,15 +8,14 @@ pipeline {
             }
         }
 
-        stage('Install Environment & Run Tests') {
-            steps {
-                echo 'Setting up project environment and running Playwright scripts...'
-                bat '''
-                pip install -r requirements.txt
-                pytest --alluredir=allure-results
-                '''
-            }
-        }
+       stage('Install Environment & Run Tests') {
+    steps {
+        echo 'Setting up project environment and running Playwright scripts...'
+        bat '''
+        pytest --alluredir=allure-results
+        '''
+    }
+}
     }
 
     post {
