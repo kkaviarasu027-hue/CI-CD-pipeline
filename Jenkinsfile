@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // Capitalized 'Allure' to match the Jenkins tool type standard
-        Allure 'allure'
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
@@ -26,6 +21,7 @@ pipeline {
 
     post {
         always {
+            // This builds the dashboard webpage directly from your results folder
             allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
     }
