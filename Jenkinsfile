@@ -8,19 +8,21 @@ pipeline {
             }
         }
 
-       stage('Install Environment & Run Tests') {
-    steps {
-        echo 'Setting up project environment and running Playwright scripts...'
-        bat '''
-        pytest --alluredir=allure-results
-        '''
-    }
-}
+        stage('Install Dependencies & Run Playwright Tests') {
+            steps {
+                echo 'Installing npm packages and executing JS automation suite...'
+                // Running Windows batch commands for Node.js Playwright execution
+                bat '''
+                npm install
+                npx playwright test --reporter=line,allure-playwright
+                '''
+            }
+        }
     }
 
     post {
         always {
-            // This builds the dashboard webpage directly from your results folder
+            // This reads your generated allure-results folder and updates your UI graphs
             allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
     }
