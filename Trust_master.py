@@ -36,7 +36,7 @@ async def run_create_trust(playwright: Playwright) -> None:
     await page.get_by_role("button", name="Create Trust").click()
 
     # Trust Code & Name
-    await page.get_by_role("textbox", name="Enter Trust Code").fill("T08323201")
+    await page.get_by_role("textbox", name="Enter Trust Code").fill("T023201")
     await page.get_by_role("textbox", name="Enter Trust Name").fill("JOZUNA TRUST")
 
     # Upload Logo
@@ -74,12 +74,13 @@ async def run_manage_institutions(playwright: Playwright) -> None:
     await page.get_by_text("Unmapped Institutions").click()
 
     await page.get_by_role("textbox", name="Search Trusts...").fill("jozuna ")
-
+    await page.get_by_role("textbox", name="Search Trusts...").clear()
     # 1st Update Sequence
     await page.get_by_role("button", name="Edit Trust").nth(1).click()
     await page.get_by_role("button", name="Update").click()
     await handle_popup(page, "Yes")
-    await handle_popup(page, "Ok")  # Safe case-insensitive wait and click
+    await handle_popup(page, "OK")
+    # Safe case-insensitive wait and click
 
     # Toggle Switch Sequence
     await page.locator(".table-cell > div > .toggle-switch > .toggle-slider").first.click()

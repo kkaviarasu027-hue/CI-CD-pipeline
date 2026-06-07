@@ -7,7 +7,7 @@ def run(playwright: Playwright) -> None:
     context = browser.new_context()
     page = context.new_page()
 
-    page.goto("https://brilliant-choux-3ddb91.netlify.app/")
+    page.goto("https://polite-kleicha-37f855.netlify.app/")
     page.get_by_role("textbox", name="college.admin@jozuna.com").click()
     page.get_by_role("textbox", name="college.admin@jozuna.com").fill("kalpana@yopmail.com")
     page.get_by_role("textbox", name="Enter password").click()
@@ -29,8 +29,10 @@ def run(playwright: Playwright) -> None:
     department_menu_svg.click(force=True)
     # Locate the Institute Master text span directly using custom XPath
     print("Locating menu item via explicit text span...")
-    Department_Associate_span = page.locator("").first
-    Department_Associate_span.wait_for(state="visible", timeout=10000)
+    Department_Associate_span = page.locator(
+        "//a[contains(@class,'cm-menu-item') and contains(@class,'cm-active')]//*[name()='svg']"
+    ).first
+
     Department_Associate_span.click()
 
     page.get_by_role("link", name="Department Master").click()
@@ -38,16 +40,53 @@ def run(playwright: Playwright) -> None:
     page.get_by_role("textbox", name="Enter Department Code").click()
     page.get_by_role("textbox", name="Enter Department Code").fill("")
     page.get_by_role("textbox", name="Enter Department Code").press("CapsLock")
-    page.get_by_role("textbox", name="Enter Department Code").fill("FADA")
+    page.get_by_role("textbox", name="Enter Department Code").fill("FA9S")
     page.get_by_role("textbox", name="Enter Department Name").click()
-    page.get_by_role("textbox", name="Enter Department Name").fill("FASHION DESIGNING")
+    page.get_by_role("textbox", name="Enter Department Name").fill("FkHO09N")
     page.get_by_role("textbox", name="Enter Department Number").click()
-    page.get_by_role("textbox", name="Enter Department Number").fill("200")
+    page.get_by_role("textbox", name="Enter Department Number").fill("0200")
 
     # Saving and handling popups
     page.get_by_role("button", name="Save").click()
     page.get_by_role("button", name="Yes").click()
     page.get_by_role("button", name="Ok").click()
+    page.locator("//input[@placeholder='Search Departments...']").fill(
+        "FASHION DESIGNING"
+    )
+    page.locator("//input[@placeholder='Search Departments...']").clear()
+    page.locator("//span[contains(@class,'common-dropdown-text')]").click()
+    page.locator("//div[normalize-space()='Not Associated']").click()
+
+    # Click Edit Department
+    page.locator("//button[@title='Edit Department']").first.click()
+
+    # Update Department Code
+    dept_code = page.locator("//input[@placeholder='Enter Department Code']")
+    dept_code.wait_for(state="visible")
+    dept_code.fill("CoFSA")
+
+    # Click Update
+    page.locator("//button[normalize-space()='Update']").click()
+
+    # Confirmation popup
+
+    page.locator("button:has-text('Yes')").wait_for(timeout=20000)
+    page.locator("button:has-text('Yes')").click()
+    ok_btn = page.locator("button:has-text('OK')")
+    ok_btn.wait_for(state="visible", timeout=20000)
+    ok_btn.click()
+    page.locator(
+        "//div[@class='table-card scroll-mode']//div[1]//div[4]//div[1]//label[1]//span[1]"
+    ).click()
+    page.locator("button:has-text('Yes')").wait_for(timeout=2000)
+    page.locator("button:has-text('Yes')").click()
+    page.locator("button:has-text('OK')").click()
+    page.locator(
+        "//div[contains(@class,'table-card scroll-mode')]//div[1]//div[6]//div[1]//button[2]//*[name()='svg']"
+    ).click()
+
+    page.locator("button:has-text('Yes')").click(force=True)
+    page.get_by_role("button", name="OK").click()
 
     # FIX: Wait for the underlying table DOM state to stabilize after closing the popup modal
     page.wait_for_load_state("domcontentloaded")

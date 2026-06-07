@@ -13,7 +13,7 @@ async def run(playwright: Playwright) -> None:
         response = await page.goto(
             "https://polite-kleicha-37f855.netlify.app/",
             wait_until="domcontentloaded",
-            timeout=10000  # Increased slightly to give Netlify apps room to wake up
+            timeout=10000
         )
 
         if response:
@@ -61,7 +61,7 @@ async def run(playwright: Playwright) -> None:
         await page.locator(".common-dropdown-full.dropdown-down button[type='button']").click()
         await page.get_by_text("XYZ Educational Trust", exact=True).click()
         await page.wait_for_timeout(4000)
-        await page.get_by_placeholder("Enter code", exact=False).fill("7877987")
+        await page.get_by_placeholder("Enter code", exact=False).fill("5677")
         await page.get_by_placeholder("Enter short name").fill("AU")
         await page.get_by_placeholder("Enter institution name").fill("anna university")
         await page.get_by_placeholder("Enter start roll number").fill("001")
@@ -127,6 +127,7 @@ async def run(playwright: Playwright) -> None:
         print("Clicking the Update button...")
         await page.get_by_role("button", name="Update", exact=True).click()
         print("Waiting for confirmation popup and clicking 'Yes'...")
+
         try:
             # Try targeting it as an interactive button first
             await page.get_by_role("button", name="Yes", exact=True).click(timeout=3000)
@@ -137,6 +138,29 @@ async def run(playwright: Playwright) -> None:
         print("Clicking OK...")
         await page.get_by_role("button", name="Ok", exact=True).click()
         print("Successfully created the new Institute entry!")
+        # Open the trust dropdown
+        await page.locator("//span[normalize-space()='All Trusts']").click()
+
+        # Select the trust
+        await page.locator("//div[normalize-space()='XYZ Educational Trust']").click()
+        # Click the SVG button
+        # Click the checkbox/toggle
+        await page.locator(
+            "//div[contains(@class,'table-card scroll-mode')]//div[1]//div[5]//div[1]//label[1]//span[1]"
+        ).click()
+
+        # Click Yes in the confirmation popup
+        await page.get_by_role("button", name="Yes").click()
+        await page.get_by_role("button", name="OK").click()
+        await page.locator(
+            "//div[@class='table-card scroll-mode']//div[1]//div[6]//div[1]//span[1]//button[1]//*[name()='svg']"
+        ).click()
+
+        # Click Yes
+        await page.get_by_role("button", name="Yes").click()
+
+        # Click OK
+        await page.get_by_role("button", name="OK").click()
 
     except TimeoutError:
         print("Error: One of the elements or page loads timed out.")
