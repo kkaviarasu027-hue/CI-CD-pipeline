@@ -1,27 +1,19 @@
-pipeline {
-    agent any
+node {
+    stage('Checkout Code') {
+        // This pulls your code from the GitHub repository branch
+        checkout scm
+        echo 'Code checked out successfully!'
+    }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-                echo 'Code pulled from GitHub successfully!'
-            }
-        }
+    stage('Install Dependencies') {
+        // Runs your installation command on Windows PowerShell/CMD
+        echo 'Installing required libraries...'
+        bat 'pip install -r requirements.txt'
+    }
 
-        stage('Install Dependencies') {
-            steps {
-                echo 'Preparing environment...'
-                // If you have a requirements file in your repo:
-                // bat 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Execute Test Suite') {
-            steps {
-                echo 'Running local test automation...'
-                // bat 'pytest'
-            }
-        }
+    stage('Run Selenium Tests') {
+        // Triggers your Selenium automated test runner
+        echo 'Running automation framework...'
+        bat 'pytest'
     }
 }
